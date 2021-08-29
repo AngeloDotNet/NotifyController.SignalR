@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using Chat_SignalR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,31 @@ namespace NotifyController_SignalR.Controllers
         }
 
         [HttpPost]
-        public async Task SendServerMessage([FromForm] InputChatSender model)
+        public async Task<string> SendServerMessage([FromForm] InputChatSender model)
         {
-            await signalR.Clients.All.SendAsync("ReceiveMessage",model.user, model.message);
+            HttpStatusCode result = await PublishMessage(model.user, model.message);
+            if (result == HttpStatusCode.OK)
+            {
+                return result.ToString();
+            }
+            else
+            {
+                result = HttpStatusCode.InternalServerError;
+                return result.ToString();
+            }
+        }
+
+        public async Task<HttpStatusCode> PublishMessage(string user, string message)
+        {
+            try
+            {
+                await signalR.Clients.All.SendAsync("ReceiveMessage", user, message);
+                return HttpStatusCode.OK;
+            }
+            catch
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
     }
 }
