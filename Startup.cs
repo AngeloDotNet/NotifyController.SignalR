@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace Chat_SignalR
 {
@@ -21,6 +22,11 @@ namespace Chat_SignalR
             });
 
             services.AddMvc();
+            //services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API_Chat_SignalR", Version = "v1" });
+            });
             services.AddSignalR();
         }
 
@@ -29,6 +35,8 @@ namespace Chat_SignalR
             if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API_Chat_SignalR v1"));
             }
             else
             {
