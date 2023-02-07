@@ -1,13 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+namespace Chat_SignalR.Controllers;
 
-namespace Chat_SignalR.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            ViewData["Title"] = "Benvenuto!";
-            return View();
-        }
+        ViewData["Title"] = "Benvenuto!";
+        return View();
     }
 }
