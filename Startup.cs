@@ -2,6 +2,13 @@ namespace Chat_SignalR;
 
 public class Startup
 {
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.Configure<CookiePolicyOptions>(options =>
@@ -19,11 +26,14 @@ public class Startup
         services.AddSignalR();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(WebApplication app)
     {
-        if (env.IsEnvironment("Development"))
+        IWebHostEnvironment env = app.Environment;
+
+        if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API_Chat_SignalR v1"));
         }
